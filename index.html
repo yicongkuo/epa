@@ -35,21 +35,21 @@
 		           	<br>
 					<div class="datetime">
 						<label>起始日</label>
-						<input id="startDate" type="date" value="2015-11-30"
+						<input id="startDate" type="date" value="2017-06-21"
 						       data-dojo-type="dijit/form/DateTextBox" 
 						       data-dojo-props="placeHolder:'日/月/年'"/>
 
-						<input id="startTime" type="text" value="T00:00:00"
+						<input id="startTime" type="text" value="T11:05:00"
 						       data-dojo-type="dijit/form/TimeTextBox" data-dojo-props="constraints:{  timePattern: 'HH:mm:ss'}, placeHolder:'時:分:秒'"/>
 					</div>
 					<br>
 		           	<div class="datetime">
 						<label>終止日</label>
-						<input id="endDate" type="date" value="2015-11-30"
+						<input id="endDate" type="date" value="2017-06-21"
 						       data-dojo-type="dijit/form/DateTextBox" 
 						       data-dojo-props="placeHolder:'日/月/年'"/>
 
-						<input id="endTime" type="text" value="T04:00:00"
+						<input id="endTime" type="text" value="T12:32:00"
 						       data-dojo-type="dijit/form/TimeTextBox" data-dojo-props="constraints:{  timePattern: 'HH:mm:ss'}, placeHolder:'時:分:秒'"/>
 					</div>
 					<br>
@@ -88,19 +88,18 @@
 	              data-dojo-type="dijit/layout/TabContainer"
 	              tabPosition="top">
 			    
-			    <div id="dataView"
-			         data-dojo-type="dijit/layout/ContentPane" 
-		             title="資料來源">
+			    <div id="dataView" title="資料來源"
+			         data-dojo-type="dijit/layout/ContentPane">
+			         <a href="https://services7.arcgis.com/tVmMUEViFfyHBZvj/ArcGIS/rest/services/Bigdata/FeatureServer/54">EPA_MQTT_TYU_0621_97_all</a>
 		        </div>
 
-			    <div id="mapView"
-			         data-dojo-type="dijit/layout/ContentPane" 
-		             title="地圖">
+			    <div id="mapView" title="地圖" 
+			         data-dojo-type="dijit/layout/ContentPane"
+			         data-dojo-props="selected:true">
 		        </div>
 			    
-			    <div id="tableView"
-			         data-dojo-type="dijit/layout/ContentPane" 
-		             title="表格">
+			    <div id="tableView" title="表格"
+			         data-dojo-type="dijit/layout/ContentPane">
 		        </div>
 	        </div>			
 	    </div>
