@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>依時間區段搜尋資料</title>
+
+	<!-- 載入ArcGIS程式庫 -->
+	<link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/themes/light/main.css">
+	<script src="https://js.arcgis.com/4.5/"></script>
+
+	<!-- 載入外觀主題 -->
+	<link rel="stylesheet" href="./theme/css/dojo/flat.css">
+
+	<!-- 載入自行開發的程式碼 -->
+	<link rel="stylesheet" href="./main.css">
+	<script src="./main.js"></script>
+</head>
+<body>
+	<div id="borderContainer"
+	     data-dojo-type="dijit/layout/BorderContainer" 
+		 data-dojo-props="design:'sidebar', gutters:true, liveSplitters:true" >
+	    
+	    <!-- 左側分頁 -->
+	    <div id="leftPanel"
+	         data-dojo-type="dijit/layout/ContentPane" 
+	         data-dojo-props="splitter:true, region:'left'">
+	        <!-- 手風琴面板容器 -->
+	        <div id="accordionContainer"
+	             data-dojo-type="dijit/layout/AccordionContainer">
+		        
+		        <div id="queryTimePage"
+		             data-dojo-type="dijit/layout/ContentPane"	
+		             title="依時間區段查詢" selected="true">
+		           	<br>
+					<div class="datetime">
+						<label>起始日</label>
+						<input id="startDate" type="date" 
+							   data-dojo-type="dijit/form/DateTextBox" 
+						/>
+
+						<input id="startTime" type="text" 
+							   data-dojo-type="dijit/form/TimeTextBox" data-dojo-props="constraints:{  timePattern: 'HH:mm:ss'}, placeHolder:'00:00:00'"/>
+					</div>
+					<br>
+		           	<div class="datetime">
+						<label>終止日</label>
+						<input id="endDate" type="date" 
+						       data-dojo-type="dijit/form/DateTextBox" 
+						       data-dojo-props="constraints:{ datePattern: 'MM-dd-yy'}, placeHolder:'mm-dd-yy'"/>
+						<input id="endTime" type="text" 
+						       data-dojo-type="dijit/form/TimeTextBox" data-dojo-props="constraints:{  timePattern: 'HH:mm:ss.SSS'}, placeHolder:'00:00:00.000'"/>
+					</div>
+					<br>
+					<!-- 查詢按鈕 -->
+					<button id="queryTime" type="button"
+					        data-dojo-type="dijit/form/Button" >
+						開始查詢
+					</button>
+
+					<button id="removeTimeResult" type="button"
+					        data-dojo-type="dijit/form/Button" >
+						清除結果
+					</button>
+		        </div>
+		        
+		        <div id="queryAttrPage"
+		             data-dojo-type="dijit/layout/ContentPane" 
+		             title="依屬性條件查詢">
+		            屬性查詢
+		        </div>
+		        
+		        <div id="queryExtentPage"
+		             data-dojo-type="dijit/layout/ContentPane" 
+		             title="依地圖選取查詢">
+		            地圖查詢
+		        </div>
+	        </div>
+	    </div>
+	    
+	    <!-- 右側分頁 -->
+	    <div id="rightPanel"
+	    	 data-dojo-type="dijit/layout/ContentPane" 
+	         data-dojo-props="region:'center'">
+	        <!-- 分頁面板容器 -->
+	        <div id="tabContainer"
+	              data-dojo-type="dijit/layout/TabContainer"
+	              tabPosition="top">
+			    
+			    <div id="dataView"
+			         data-dojo-type="dijit/layout/ContentPane" 
+		             title="資料來源">
+		        </div>
+
+			    <div id="mapView"
+			         data-dojo-type="dijit/layout/ContentPane" 
+		             title="地圖">
+		        </div>
+			    
+			    <div id="tableView"
+			         data-dojo-type="dijit/layout/ContentPane" 
+		             title="表格">
+		        </div>
+	        </div>			
+	    </div>
+	</div>
+</body>
+</html>
