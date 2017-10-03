@@ -11,7 +11,9 @@ define([
 	// Esri 
 	"esri/tasks/QueryTask",
 	"esri/tasks/support/Query",
-	"esri/layers/GraphicsLayer",
+	"esri/layers/FeatureLayer",
+
+	"dojo/date/locale",
 
 	// Dijit Built-In Widgets					  
 	"dijit/form/FilteringSelect",
@@ -21,7 +23,8 @@ define([
 ], function (
 	declare, _WidgetBase, _TemplatedMixin, on,
 	 _WidgetsInTemplateMixin, _Container, templates,
-	QueryTask, Query, GraphicsLayer	 
+	QueryTask, Query, FeatureLayer,
+	locale 
 ){
 	return declare([
 		_WidgetBase, _TemplatedMixin, 
@@ -32,9 +35,27 @@ define([
 
 		map : null,
 		view: null,
+		symbols: {
+			point: {
+			  type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
+			  style: "circle",
+			  color: "orange",
+			  size: "12px",  // pixels
+			  outline: {  // autocasts as new SimpleLineSymbol()
+			    color: [ 255, 255, 0 ],
+			    width: 1  // points
+			  }
+			},
+			polyline:{
+
+			},
+			polygon:{
+
+			}
+		},
 
 		constructor: function (attrs){ // 繼承自 _WidgetBase
-			console.log('QueryByTime is loaded');
+			this.inherited(arguments);
 		},
 
 		postMixInProperties: function (){  // 繼承自 _WidgetBase
@@ -44,12 +65,13 @@ define([
 
 		postCreate: function (){  // 繼承自 _WidgetBase
 			this.inherited(arguments);
-			console.log(this.removeButton);
 			on(this.queryButton, 'click', this._query.bind(this));
+			on(this.removeButton, 'click', this._removeGraphics.bind(this));
 		},
 
 		startup: function (){  // 繼承自 _WidgetBase
 			this.inherited(arguments);
+			console.log('QueryByTime is loaded');
 		},
 
 		_query: function (){
@@ -78,30 +100,27 @@ define([
 				queryTask.execute(query)
 				  	     .then(this._querySuccess.bind(this))
 				         .otherwise(this._queryError.bind(this));
-				
+				queryTask.executeForExtent(query)
+						 .then(this._queryExtentSuccess.bind(this))
+						 .otherwise(this._queryExtentError.bind(this));
+		},
+
+		_queryExpression: function (begin, end){
+			return "time > '" + begin + "' AND time < '" + end + "'";
 		},
 
 		_querySuccess: function (response){
-			var symbol = {
-			  type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
-			  style: "square",
-			  color: "blue",
-			  size: "8px",  // pixels
-			  outline: {  // autocasts as new SimpleLineSymbol()
-			    color: [ 255, 255, 0 ],
-			    width: 3  // points
-			  }
-			}
-			this.view.graphics.removeAll();
+			this._removeGraphics();
+			console.log(response);
+			var symbol = this.symbols.point,
+				popupTemplate = this._createPopupTemplate(response.fields);
+
 		    response.features.forEach(function (graphic){
 		    	graphic.symbol = symbol;
+		    	graphic.popupTemplate = popupTemplate;
 		    	this.view.graphics.add(graphic);
 		    }.bind(this));
 		},  
-
-		_removeGraphics: function (){
-			this.view.graphics.removeAll();
-		},
 
 		_queryError: function (error){
 			alert("查詢參數有誤! 請重新查詢!");
@@ -109,8 +128,53 @@ define([
 			return;
 		},
 
-		_queryExpression: function (begin, end){
-			return "time > '" + begin + "' AND time < '" + end + "'";
+		_queryExtentSuccess: function (response) {
+			this.view.goTo(response.extent);
+		},
+		
+		_queryExtentError: function (error) {
+			console.log(error);
+		},
+
+		_removeGraphics: function (){
+			this.view.graphics.removeAll();
+		},
+
+		_createPopupTemplate: function(fields){
+			var fieldInfos = [];
+
+			fields.forEach(function (field){
+				var format = this._createFieldFormat(field.type);
+				fieldInfos.push({
+					fieldName: field.name,
+					visible: true,
+					label: field.alias,
+					format: format
+				});
+			}.bind(this));
+
+			return {
+			  title: "圖層資訊",
+			  content: [{
+			    type: "fields",
+			    fieldInfos: fieldInfos
+			  }]
+			};
+		},
+
+		_createFieldFormat: function (type){
+			if( type === "double"){
+				return {digitSeparator: true, places: 2};
+			}
+			if( type === "integer" ){
+				return {digitSeparator: true, places: 0};
+			}
+			if( type === "string"){
+				return {};
+			}
+			if( type === "date"){
+				return { dateFormat: 'short-date-le-long-time'};
+			}
 		},
 
 		_validateInput: function (input){
