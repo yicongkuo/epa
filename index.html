@@ -3,7 +3,23 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-	<title>依時間區段搜尋資料</title>
+	<title>搜尋資料</title>
+
+	<!-- 設定自行建立的模組位址 -->
+	<script>
+		var dojoConfig = {
+			packages:[{
+				name: 'QueryByTime', 
+				location: location.href.replace(location.href.split('/').pop(), "") + 'widgets/queryByTime'
+			}, {
+				name: 'QueryByAttr', 
+				location: location.href.replace(location.href.split('/').pop(), "") + 'widgets/QueryByAttr'
+			}, {
+				name: 'QueryByExtent', 
+				location: location.href.replace(location.href.split('/').pop(), "") + 'widgets/QueryByExtent'
+			}]
+		};
+	</script>
 
 	<!-- 載入ArcGIS程式庫 -->
 	<link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/themes/light/main.css">
@@ -23,77 +39,39 @@
 	    
 	    <!-- 左側分頁 -->
 	    <div id="leftPanel"
-	         data-dojo-type="dijit/layout/ContentPane" 
+	    	 data-dojo-type="dijit/layout/ContentPane" 
 	         data-dojo-props="splitter:true, region:'left'">
 	        <!-- 手風琴面板容器 -->
-	        <div id="accordionContainer"
-	             data-dojo-type="dijit/layout/AccordionContainer">
-		        
-		        <div id="queryTimePage"
-		             data-dojo-type="dijit/layout/ContentPane"	
-		             title="依時間區段查詢" selected="true">
-		           	<br>
-					<div class="datetime">
-						<label>起始日</label>
-						<input id="startDate" type="date" value="2017-06-21"
-						       data-dojo-type="dijit/form/DateTextBox" 
-						       data-dojo-props="placeHolder:'日/月/年'"/>
-
-						<input id="startTime" type="text" value="T03:05:00"
-						       data-dojo-type="dijit/form/TimeTextBox" data-dojo-props="constraints:{  timePattern: 'HH:mm:ss', clickableIncrement: 'T00:15:00'}, placeHolder:'時:分:秒'"/>
-					</div>
-					<br>
-		           	<div class="datetime">
-						<label>終止日</label>
-						<input id="endDate" type="date" value="2017-06-21"
-						       data-dojo-type="dijit/form/DateTextBox" 
-						       data-dojo-props="placeHolder:'日/月/年'"/>
-
-						<input id="endTime" type="text" value="T04:32:00"
-						       data-dojo-type="dijit/form/TimeTextBox" data-dojo-props="constraints:{  timePattern: 'HH:mm:ss', clickableIncrement: 'T00:15:00'}, placeHolder:'時:分:秒'"/>
-					</div>
-					<br>
-					<!-- 查詢按鈕 -->
-					<button id="queryTime" type="button"
-					        data-dojo-type="dijit/form/Button" >
-						開始查詢
-					</button>
-
-					<button id="removeTimeResult" type="button"
-					        data-dojo-type="dijit/form/Button" >
-						清除查詢結果
-					</button>
+	        <div data-dojo-type="dijit/layout/AccordionContainer">
+				
+				<div data-dojo-type="dijit/layout/ContentPane" title="依時間區段查詢">
+					<div id="queryByTime"></div>
+				</div>
+			
+		        <div data-dojo-type="dijit/layout/ContentPane" title="依屬性條件查詢">
+		            <div id="queryByAttr">依屬性條件查詢</div>
 		        </div>
 		        
-		        <div id="queryAttrPage"
-		             data-dojo-type="dijit/layout/ContentPane" 
-		             title="依屬性條件查詢">
-		            屬性查詢
-		        </div>
-		        
-		        <div id="queryExtentPage"
-		             data-dojo-type="dijit/layout/ContentPane" 
-		             title="依地圖選取查詢">
-		            地圖查詢
+		        <div data-dojo-type="dijit/layout/ContentPane" title="依地圖選取查詢">
+		            <div id="queryByAttr">依地圖選取查詢</div>
 		        </div>
 	        </div>
 	    </div>
 	    
 	    <!-- 右側分頁 -->
 	    <div id="rightPanel"
-	    	 data-dojo-type="dijit/layout/ContentPane" 
+	         data-dojo-type="dijit/layout/ContentPane" 
 	         data-dojo-props="region:'center'">
 	        <!-- 分頁面板容器 -->
-	        <div id="tabContainer"
-	              data-dojo-type="dijit/layout/TabContainer"
-	              tabPosition="top">
+	        <div data-dojo-type="dijit/layout/TabContainer" tabPosition="top">
 			    
 			    <div id="dataView" title="資料來源"
 			         data-dojo-type="dijit/layout/ContentPane">
+			         
 			         <a href="https://services7.arcgis.com/tVmMUEViFfyHBZvj/ArcGIS/rest/services/Bigdata/FeatureServer/54">EPA_MQTT_TYU_0621_97_all</a>
 		        </div>
 
-			    <div id="mapView" title="地圖" 
+			    <div id="mapView" title="地圖" selected="true"
 			         data-dojo-type="dijit/layout/ContentPane"
 			         data-dojo-props="selected:true">
 		        </div>
