@@ -8,6 +8,7 @@ define([
 	"dijit/_Container",
 	"dojo/text!QueryByTime/Widget.html", 
 
+	// dojo library
 	"dojo/dom-construct",
 	"dojo/on",
 	"dojo/date/locale",
@@ -119,7 +120,7 @@ define([
 			this._removeGraphics(); // 清除地圖上的圖形
 			this._removeTable(); //清除表格資料
 
-			console.log(response);
+			console.log(response.features);
 			this._addGraphics(response.features, response.fields);
 			this._addTable(response.features, response.fields);
 		},  
@@ -151,6 +152,9 @@ define([
 
 		_addTable: function (graphics, fields){
 			console.log(fields);
+			// 取得時間欄位
+			var dateField = "";
+			
 			// 設定表格欄位與別名
 			var columns = [];
 			fields.forEach(function (field){
@@ -158,14 +162,20 @@ define([
 					field: field.name,
 					label: field.alias
 				});
+				
+				if(field.type === "date"){
+					dateField = field.name;
+				}
 			});
 
 			// 設定表格資料來源
 			var data = []; 
 			graphics.forEach(function (graphic){
+				graphic.attributes[dateField] = this._transferDateField(graphic.attributes[dateField]);
 				data.push(graphic.attributes);
-			});
+			}.bind(this));
 
+			// 建立表格
 			var table = new Grid({
 				columns: columns
 			}, this.tableDivId);
@@ -258,6 +268,30 @@ define([
 		    	   + hours + ':' + minutes + ':' + sec;
 
 			return result; 
+		},
+
+		_transferDateField: function (value){
+			var result  = '',
+				date = new Date(value);
+
+			year    = date.getFullYear(),
+			month   = date.getMonth() +　1,
+			day     = date.getDate(),
+			hours   = date.getHours(),
+			minutes = date.getMinutes(),
+			sec     = date.getSeconds();
+
+			year    = String(year);
+		    month   = (month < 10)  ?('0' + String(month))   : String(month);
+		    day     = (day < 10)    ?('0' + String(day))     : String(day);
+		    hours   = (hours < 10)  ?('0' + String(hours))   : String(hours);
+		    minutes = (minutes < 10)?('0' + String(minutes)) : String(minutes);
+		    sec     = (sec < 10)    ?('0' + String(sec))     : String(sec);
+
+		    result = year + '/' + month + '/' + day + ' ' 
+		    	   + hours + ':' + minutes + ':' + sec;
+
+			return result;
 		}
 	});
 });
