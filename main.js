@@ -5,9 +5,9 @@ require([
 	"dojo/parser",
 	"dojo/dom",
 
-	"QueryByTime/Widget",
-	"QueryByAttr/Widget",
-	"QueryByExtent/Widget",
+	"EPA/QueryByTime/Widget",
+	"EPA/QueryByAttr/Widget",
+	"EPA/QueryByExtent/Widget",
 
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",

@@ -6,7 +6,7 @@ define([
 
 	"dijit/_WidgetsInTemplateMixin", // 在父元件中，加入子元件
 	"dijit/_Container",
-	"dojo/text!QueryByTime/Widget.html", 
+	"dojo/text!EPA/QueryByTime/Widget.html", 
 
 	// dojo library
 	"dojo/dom-construct",

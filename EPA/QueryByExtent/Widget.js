@@ -5,7 +5,7 @@ define([
 	
 	"dijit/_WidgetsInTemplateMixin", // 在父元件中，加入子元件
 	"dijit/_Container",
-	"dojo/text!QueryByExtent/Widget.html"
+	"dojo/text!EPA/QueryByExtent/Widget.html"
 	
 ], function (
 	declare, _WidgetBase, _TemplatedMixin,
