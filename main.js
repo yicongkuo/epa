@@ -1,13 +1,9 @@
 require([
 	"esri/Map",
 	"esri/views/MapView",
-	
-	"esri/tasks/QueryTask", 
-	"esri/tasks/support/Query",
-	
+
 	"dojo/parser",
 	"dojo/dom",
-	"dijit/registry",
 
 	"QueryByTime/Widget",
 	"QueryByAttr/Widget",
@@ -24,8 +20,7 @@ require([
 	"dojo/domReady!"
 ], function (
 	Map, MapView,
-	QueryTask, Query,
-	parser, dom, registry,
+	parser, dom,
 	QueryByTimeWidget, QueryByAttrWidget, QueryByExtentWidget
 ){
 
@@ -46,7 +41,8 @@ require([
 	
 	var queryByTimeWidget = new QueryByTimeWidget({
 		map: map, 
-		view: mapView
+		view: mapView,
+		tableDivId: "tableView"
 	}, "queryByTime");
 	queryByTimeWidget.startup();
 

@@ -3,17 +3,21 @@ define([
 	"dojo/_base/declare",
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
-	"dojo/on",
 
 	"dijit/_WidgetsInTemplateMixin", // 在父元件中，加入子元件
 	"dijit/_Container",
 	"dojo/text!QueryByTime/Widget.html", 
+
+	"dojo/dom-construct",
+	"dojo/on",
+	"dojo/date/locale",
+
+	'dgrid/Grid',
+
 	// Esri 
 	"esri/tasks/QueryTask",
 	"esri/tasks/support/Query",
 	"esri/layers/FeatureLayer",
-
-	"dojo/date/locale",
 
 	// Dijit Built-In Widgets					  
 	"dijit/form/FilteringSelect",
@@ -21,10 +25,11 @@ define([
 	"dijit/form/TimeTextBox",
 	"dijit/form/Button"
 ], function (
-	declare, _WidgetBase, _TemplatedMixin, on,
-	 _WidgetsInTemplateMixin, _Container, templates,
-	QueryTask, Query, FeatureLayer,
-	locale 
+	declare, _WidgetBase, _TemplatedMixin, 
+	_WidgetsInTemplateMixin, _Container, templates,
+	domConstruct, on, locale,
+	Grid,
+	QueryTask, Query, FeatureLayer
 ){
 	return declare([
 		_WidgetBase, _TemplatedMixin, 
@@ -34,7 +39,8 @@ define([
 		templateString: templates, // 繼承自 _TemplatedMixin
 
 		map : null,
-		view: null,
+		view: null,  // MapView 或是 SceneView
+		tableDivId: "", // 存放表格的div元素ID
 		symbols: {
 			point: {
 			  type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
@@ -66,7 +72,7 @@ define([
 		postCreate: function (){  // 繼承自 _WidgetBase
 			this.inherited(arguments);
 			on(this.queryButton, 'click', this._query.bind(this));
-			on(this.removeButton, 'click', this._removeGraphics.bind(this));
+			on(this.removeButton, 'click', this._removeResults.bind(this));
 		},
 
 		startup: function (){  // 繼承自 _WidgetBase
@@ -110,16 +116,12 @@ define([
 		},
 
 		_querySuccess: function (response){
-			this._removeGraphics();
-			console.log(response);
-			var symbol = this.symbols.point,
-				popupTemplate = this._createPopupTemplate(response.fields);
+			this._removeGraphics(); // 清除地圖上的圖形
+			this._removeTable(); //清除表格資料
 
-		    response.features.forEach(function (graphic){
-		    	graphic.symbol = symbol;
-		    	graphic.popupTemplate = popupTemplate;
-		    	this.view.graphics.add(graphic);
-		    }.bind(this));
+			console.log(response);
+			this._addGraphics(response.features, response.fields);
+			this._addTable(response.features, response.fields);
 		},  
 
 		_queryError: function (error){
@@ -136,8 +138,51 @@ define([
 			console.log(error);
 		},
 
+		_addGraphics: function (grahpics, fields){
+			var symbol = this.symbols.point,
+				popupTemplate = this._createPopupTemplate(fields);
+
+		    grahpics.forEach(function (graphic){
+		    	graphic.symbol = symbol;
+		    	graphic.popupTemplate = popupTemplate;
+		    	this.view.graphics.add(graphic);
+		    }.bind(this));
+		},
+
+		_addTable: function (graphics, fields){
+			console.log(fields);
+			// 設定表格欄位與別名
+			var columns = [];
+			fields.forEach(function (field){
+				columns.push({
+					field: field.name,
+					label: field.alias
+				});
+			});
+
+			// 設定表格資料來源
+			var data = []; 
+			graphics.forEach(function (graphic){
+				data.push(graphic.attributes);
+			});
+
+			var table = new Grid({
+				columns: columns
+			}, this.tableDivId);
+			table.renderArray(data);
+		},
+
+		_removeResults: function (){
+			this._removeGraphics();
+			this._removeTable();
+		},
+
 		_removeGraphics: function (){
 			this.view.graphics.removeAll();
+		},
+
+		_removeTable: function (){
+			domConstruct.empty(this.tableDivId);
 		},
 
 		_createPopupTemplate: function(fields){
