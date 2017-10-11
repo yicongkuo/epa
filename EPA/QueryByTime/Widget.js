@@ -52,12 +52,6 @@ define([
 			    color: [ 255, 255, 0 ],
 			    width: 1  // points
 			  }
-			},
-			polyline:{
-
-			},
-			polygon:{
-
 			}
 		},
 
@@ -94,14 +88,15 @@ define([
 			// 取得查詢參數
 			var begin = this._transferDateTime(this.startDate.value, this.startTime.value);
 			var end = this._transferDateTime(this.endDate.value, this.endTime.value);
+			var devId = this.devList.value;
 
 			// 設定查詢參數
 			var query = new Query();
-				query.where = this._queryExpression(begin, end);
+				query.where = this._queryExpression(devId, begin, end);
 				query.outSpatialReference = { wkid:102100 };
 				query.returnGeometry = true;
 				query.outFields = ["*"];
-
+				console.log(query.where);
 			// 執行查詢
 			var queryTask = new QueryTask({url: this.layerUrl.value});
 				queryTask.execute(query)
@@ -112,8 +107,8 @@ define([
 						 .otherwise(this._queryExtentError.bind(this));
 		},
 
-		_queryExpression: function (begin, end){
-			return "time > '" + begin + "' AND time < '" + end + "'";
+		_queryExpression: function (devId, begin, end){
+			return "time > '" + begin + "' AND time < '" + end + "'" + " AND deviceId = "+ devId;
 		},
 
 		_querySuccess: function (response){

@@ -6,9 +6,9 @@ html, body, #borderContainer, #tabContainer, #mapView{
 }
 
 #leftPanel{
-	width: 35%;
+	width: 40%;
 }
 
 #rightPanel{
-	width: 65%;
+	width: 60%;
 }

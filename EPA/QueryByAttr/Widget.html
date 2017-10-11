@@ -1,3 +1,22 @@
-<div>  	
-	<h1>Query By Extent</h1>
+div>  	
+   	<br>
+   	<label>選擇要查詢的資料</label>
+	<select data-dojo-attach-point="layerUrl"
+	        data-dojo-type="dijit/form/FilteringSelect">
+	    <option value="https://services7.arcgis.com/tVmMUEViFfyHBZvj/ArcGIS/rest/services/Bigdata/FeatureServer/54" selected>測站歷史資料</option>
+	</select>
+   	<br><br>
+	<!-- 測站資料 -->
+	<div id="devList"></div>
+
+	<!-- 查詢按鈕 -->
+	<button data-dojo-attach-point="queryButton" type="button" 
+	        data-dojo-type="dijit/form/Button" >
+		開始查詢
+	</button>
+
+	<button data-dojo-attach-point="removeButton" type="button"
+	        data-dojo-type="dijit/form/Button" >
+		清除查詢結果
+	</button>
 </div>
