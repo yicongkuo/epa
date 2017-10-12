@@ -46,4 +46,10 @@ require([
 	}, "queryByTime");
 	queryByTimeWidget.startup();
 
+	var queryByExtentWidget = new QueryByExtentWidget({
+		map: map,
+		view: mapView,
+		tableDivId: "tableView"
+	}, "queryByExtent");
+	queryByExtentWidget.startup();
 });

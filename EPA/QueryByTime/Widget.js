@@ -87,7 +87,7 @@ define([
 
 			// 取得查詢參數
 			var begin = this._transferDateTime(this.startDate.value, this.startTime.value);
-			var end = this._transferDateTime(this.endDate.value, this.endTime.value);
+			var end   = this._transferDateTime(this.endDate.value, this.endTime.value);
 			var devId = this.devList.value;
 
 			// 設定查詢參數
@@ -96,7 +96,7 @@ define([
 				query.outSpatialReference = { wkid:102100 };
 				query.returnGeometry = true;
 				query.outFields = ["*"];
-				console.log(query.where);
+
 			// 執行查詢
 			var queryTask = new QueryTask({url: this.layerUrl.value});
 				queryTask.execute(query)
