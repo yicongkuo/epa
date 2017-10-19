@@ -1,0 +1,21 @@
+<div>  	
+   	<br>
+   	<label>1. 選擇資料來源</label>
+	<select data-dojo-attach-point="layerUrl"
+	        data-dojo-type="dijit/form/FilteringSelect">
+	    <option value="https://services7.arcgis.com/tVmMUEViFfyHBZvj/ArcGIS/rest/services/Bigdata/FeatureServer/54" selected>測站歷史資料</option>
+	</select>
+	<br><br>
+	<label>2. 啟用環域查詢</label>
+	<span data-dojo-attach-point="isCheck" 
+		  data-dojo-type="dijit/form/CheckBox" >
+	</span>
+	<br>
+	<p>3. 請在地圖上點選你感興趣的區域</p>
+	<p>4. 要點選每個測站取得資訊時，請取消『2.啟用環域查詢』勾選框</p>
+	<br>
+	<button data-dojo-attach-point="removeButton" 
+	        data-dojo-type="dijit/form/Button" >
+		移除查詢結果
+	</button>
+</div>

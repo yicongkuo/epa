@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>搜尋資料</title>
+
+	<!-- 設定自行建立的模組位址 -->
+	<script>
+		var dojoConfig = {
+			packages:[{
+				name: 'EPA', 
+				location: location.href.replace(location.href.split('/').pop(), "") + 'EPA'
+			}]
+		};
+	</script>
+
+	<!-- 載入ArcGIS程式庫 -->
+	<link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/themes/light/main.css">
+	<script src="https://js.arcgis.com/4.5/"></script>
+
+	<!-- 載入外觀主題 -->
+	<link rel="stylesheet" href="./css/flat.css">
+
+	<!-- 載入自行開發的程式碼 -->
+	<link rel="stylesheet" href="./main.css">
+	<script src="./main.js"></script>
+</head>
+<body>
+	<div id="borderContainer"
+	     data-dojo-type="dijit/layout/BorderContainer" 
+		 data-dojo-props="design:'sidebar', gutters:true, liveSplitters:true" >
+	    
+	    <!-- 左側分頁 -->
+	    <div id="leftPanel"
+	    	 data-dojo-type="dijit/layout/ContentPane" 
+	         data-dojo-props="splitter:true, region:'left'">
+	        <!-- 手風琴面板容器 -->
+	        <div data-dojo-type="dijit/layout/AccordionContainer">
+				
+				<div data-dojo-type="dijit/layout/ContentPane" title="依時間區段查詢">
+					<div id="queryByTime"></div>
+				</div>
+			
+<!-- 		        <div data-dojo-type="dijit/layout/ContentPane" title="依屬性條件查詢">
+		            <div id="queryByAttr">依屬性條件查詢</div>
+		        </div> -->
+		        
+		        <div data-dojo-type="dijit/layout/ContentPane" title="依地圖選取查詢">
+		            <div id="queryByExtent">依地圖選取查詢</div>
+		        </div>
+	        </div>
+	    </div>
+	    
+	    <!-- 右側分頁 -->
+	    <div id="rightPanel"
+	         data-dojo-type="dijit/layout/ContentPane" 
+	         data-dojo-props="region:'center'">
+	        <!-- 分頁面板容器 -->
+	        <div data-dojo-type="dijit/layout/TabContainer" tabPosition="top">
+
+			    <div id="mapView" title="地圖" selected="true"
+			         data-dojo-type="dijit/layout/ContentPane"
+			         data-dojo-props="selected:true">
+		        </div>
+			    
+			    <div title="表格" data-dojo-type="dijit/layout/ContentPane">
+		        	<div id="tableView"></div>
+		        </div>
+	        </div>			
+	    </div>
+	</div>
+</body>
+</html>
