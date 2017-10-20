@@ -34,13 +34,12 @@ require([
 
 	// bind events
 	var drawButtons = [dom.byId("POINT"), dom.byId("POLYLINE"), dom.byId("RECTANGLE")],
-		textareas = [dom.byId('geoString'), dom.byId('bufferString')];
-	
-	var	removeTextButton = dom.byId("RemoveText"),
-		uploadButton = dom.byId("Upload");
-		
-	on(removeTextButton, "click", removeText);
+		textareas = [dom.byId('geoString'), dom.byId('bufferString')],
+		removeTextButton = dom.byId("RemoveText");
 
+	var fileInput = document.getElementById('fileInput');
+		fileInput.addEventListener("change", uploadFile);
+		
 	map.on("load", function (){
 		drawTool = new Draw(map, {showTooltips: true});
 		drawTool.on("draw-complete", finishDraw);
@@ -48,6 +47,9 @@ require([
 		drawButtons.forEach(function (button){
 			on(button, "click", clickHandler);
 		});
+		
+		on(removeTextButton, "click", removeText);
+		
 	});
 
 	function clickHandler(evt){
@@ -213,5 +215,35 @@ require([
 		textareas.forEach(function (textarea){
 			domAttr.set(textarea, 'value', '');
 		});	
+	}
+
+	function uploadFile(evt){
+		var file = fileInput.files[0];
+		var type = $('#fileType').val()
+
+		if(type === "GeoJSON"){
+			readGeoJSON(file)
+		}
+	}
+
+	function readGeoJSON(file){
+		var reader = new FileReader();
+		reader.onload = function(evt) {
+			var jsonObj = JSON.parse(reader.result);
+			console.log(jsonObj);
+		}
+		reader.readAsText(file); 
+	}
+
+	function parsePoint(json){
+
+	}
+
+	function parsePolyline(json){
+		
+	}
+
+	function parsePolygon(json){
+
 	}
 });

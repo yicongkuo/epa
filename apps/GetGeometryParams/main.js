@@ -10,6 +10,7 @@ require([
 
 	"esri/Color",
 	"esri/geometry/geometryEngine",
+	"esri/request",
 
 	"dojo/dom",
 	"dojo/dom-attr",
@@ -19,7 +20,7 @@ require([
 ], function (
 	Map, Draw, Graphic,
 	SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, 
-	Color, geometryEngine,
+	Color, geometryEngine, esriRequest,
 	dom, domAttr, domClass, on
 ){
 	// create map
@@ -34,12 +35,8 @@ require([
 
 	// bind events
 	var drawButtons = [dom.byId("POINT"), dom.byId("POLYLINE"), dom.byId("RECTANGLE")],
-		textareas = [dom.byId('geoString'), dom.byId('bufferString')];
-	
-	var	removeTextButton = dom.byId("RemoveText"),
-		uploadButton = dom.byId("Upload");
-		
-	on(removeTextButton, "click", removeText);
+		textareas = [dom.byId('geoString'), dom.byId('bufferString')],
+		removeTextButton = dom.byId("RemoveText");
 
 	map.on("load", function (){
 		drawTool = new Draw(map, {showTooltips: true});
@@ -48,6 +45,9 @@ require([
 		drawButtons.forEach(function (button){
 			on(button, "click", clickHandler);
 		});
+		
+		on(removeTextButton, "click", removeText);
+		on(dojo.byId("uploadForm"), "change", uploadFile);
 	});
 
 	function clickHandler(evt){
@@ -97,7 +97,6 @@ require([
 
 	function finishDraw(result){
 		var geometry = result.geometry;
-
 		// 清除字串內容
 		textareas.forEach(function (textarea){
 			domAttr.set(textarea, 'value', '');
@@ -213,5 +212,87 @@ require([
 		textareas.forEach(function (textarea){
 			domAttr.set(textarea, 'value', '');
 		});	
+	}
+
+	function uploadFile(evt){
+		var fileName = evt.target.value.toLowerCase();
+		
+		if (dojo.isIE) { //filename is full path in IE so extract the file name
+			var arr = fileName.split("\\");
+			fileName = arr[arr.length - 1];
+		}
+		
+		if (fileName.indexOf(".zip") !== -1) {//is file a zip - if not notify user 
+			generateFeatureCollection(fileName);	
+		}else{
+			dojo.byId('upload-status').innerHTML = '<p style="color:red; font-size:15px">Add shapefile as .zip file</p>';
+		}
+	}
+
+	function generateFeatureCollection(fileName){
+        //Chrome and IE add c:\fakepath to the value - we need to remove it
+        //See this link for more info: http://davidwalsh.name/fakepath
+        var name = fileName.split(".");
+        	name = name[0].replace("c:\\fakepath\\","");
+        
+        dojo.byId('upload-status').innerHTML = '<b>正在載入… </b>' + name + '<br><br>'; 
+        
+        //Define the input params for generate see the rest doc for details
+        //http://www.arcgis.com/apidocs/rest/index.html?generate.html
+        var params = {
+          'name': name,
+          'targetSR': map.spatialReference,
+          'maxRecordCount': 1000,
+          'enforceInputFileSizeLimit': true,
+          'enforceOutputJsonSizeLimit': true
+        };
+        params.generalize = false;
+
+        var myContent = {
+          'filetype': 'shapefile',
+          'publishParameters': JSON.stringify(params),
+          'f': 'json'
+        };
+
+		esriRequest({
+			url: 'https://www.arcgis.com/sharing/rest/content/features/generate',
+			content: myContent,
+			form: dom.byId('uploadForm'),
+			handleAs: "json",
+			callbackParamName: "callback"
+		})
+		.then(requestSuccess)
+		.otherwise(requestError);
+	}
+
+	function requestSuccess(response){
+		if (response.error) {
+			errorHandler(response.error);
+			return;
+		}
+		dojo.byId('upload-status').innerHTML = "";
+		
+		var features = response.featureCollection.layers[0].featureSet.features,
+			geometryType = response.featureCollection.layers[0].featureSet.geometryType;
+
+
+		var str = JSON.stringify(features[0].geometry);
+		domAttr.set(textareas[0], 'value', str);
+	}
+
+	function requestError(error){
+		dojo.byId('upload-status').innerHTML = "<p style='color:red'>" + error.message + "</p>"
+	}
+
+	function parsePoint(json){
+
+	}
+
+	function parsePolyline(json){
+		
+	}
+
+	function parsePolygon(json){
+
 	}
 });
