@@ -43,41 +43,31 @@
 						清除字串
 					</button>
 				</div>
-				<div class="field">
-	              <form enctype="multipart/form-data" method="post" id="uploadForm" class="ui form">
-	              <div class="field">
-	                  <label class="file-upload">
-	                      <span><strong>Add File</strong></span>
-	                      <input type="file" name="file" id="inFile" />
-	                  </label>
-	              </div>
-	              </form>
-				</div>
-				<div id="upload-status" class="field"></div>
-<!-- 				<div class="inline fields">
+				
+				<div class="inline fields">
 					<div class="three wide field">
 						<label class="ui right pointing label">上傳檔案</label>
 					</div>
-					<div class="ten wide field">
+					
+					<form enctype="multipart/form-data" method="post"
+						      id="uploadForm" class="ui form four wide field"> 
 						<div class="ui action input">
-						    <input id="filename" type="text" placeholder="檔案名稱" readonly>
-						    <label for="fileInput" class="ui icon button">
+						    <label for="inFile" class="ui icon button">
 						        <i class="file icon"></i>
-						        Open File</label>
-						    <input id="fileInput" type="file" style="display:none">
-						</div>
-					</div>
-				</div>
-			  	
-			  	<div class="inline fields">
-			  		<div class="three wide field"><label class="ui right pointing label">檔案格式</label></div>
-					<div class="ten wide field">
-						<select id="fileType" class="ui fluid dropdown">
-							<option value="GeoJSON" SELECTED>GeoJSON</option>
-							<option value="Shapefile">Shapefile</option>
+						        上傳檔案
+						    </label>
+						    <input id="inFile" name="file" type="file" style="display:none">
+						</div>	
+					</form>
+					<div class="nine wide field">
+						<label>檔案格式</label>
+						<select id="fileType" class="ui dropdown">
+							<option value="geojson">GeoJSON</option>
+							<option value="shapefile" SELECTED>Shapefile</option>
 						</select>
 					</div>
-			  	</div> -->
+				</div>
+				<div id="upload-status" class="field"></div>
 
 				<div class="field">
 					<label>幾何圖形參數字串</label>
