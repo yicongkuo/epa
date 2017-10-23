@@ -12,6 +12,9 @@ require([
 	"esri/geometry/geometryEngine",
 	"esri/request",
 
+	"esri/tasks/query",
+	"esri/tasks/QueryTask",
+
 	"dojo/dom",
 	"dojo/dom-attr",
 	"dojo/dom-class",
@@ -21,6 +24,7 @@ require([
 	Map, Draw, Graphic,
 	SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, 
 	Color, geometryEngine, esriRequest,
+	Query, QueryTask,
 	dom, domAttr, domClass, on
 ){
 	// create map
@@ -33,10 +37,12 @@ require([
 	// initialize semantic ui
 	initSemanticUIs();
 
+	// web services
+	var urls = {industryArea: "https://services7.arcgis.com/tVmMUEViFfyHBZvj/ArcGIS/rest/services/TaiwanIndustryArea/FeatureServer/0"};
+
 	// bind events
 	var drawButtons = [dom.byId("POINT"), dom.byId("POLYLINE"), dom.byId("RECTANGLE")],
-		textareas = [dom.byId('geoString'), dom.byId('bufferString')],
-		removeTextButton = dom.byId("RemoveText");
+		textareas = [dom.byId('geoString'), dom.byId('bufferString')];
 
 	map.on("load", function (){
 		drawTool = new Draw(map, {showTooltips: true});
@@ -46,8 +52,11 @@ require([
 			on(button, "click", clickHandler);
 		});
 		
-		on(removeTextButton, "click", removeText);
+		$('.removeText').on('click', removeText);
+
 		on(dojo.byId("uploadForm"), "change", uploadFile);
+
+		on(dom.byId('industrailArea'), "change", selectIndustryArea);
 	});
 
 	function clickHandler(evt){
@@ -80,6 +89,7 @@ require([
 	function initSemanticUIs(){
 		$('.ui.checkbox').checkbox();
 		$('select.dropdown').dropdown();
+		$('.ui.accordion').accordion();
 	}
 
 	function setButtonClassAttr(button, drawStatus){
@@ -210,7 +220,8 @@ require([
 	function removeText(){
 		textareas.forEach(function (textarea){
 			domAttr.set(textarea, 'value', '');
-		});	
+		});
+		map.graphics.clear();
 	}
 
 	function displayFilename(evt){
@@ -291,15 +302,31 @@ require([
 		dojo.byId('upload-status').innerHTML = "<p style='color:red'>" + error.message + "</p>"
 	}
 
-	function parsePoint(json){
+	function selectIndustryArea(evt){
+		if(this.value !== "標題"){
+			var query = new Query();
+				query.where = "FNAME = N'" + this.value + "'";
+				query.returnGeometry = true;
+				query.outSpatialReference = map.spatialReference;
+
+			queryIndustry(query);
+		}
+	}
+
+	function queryIndustry(params){
+		var queryTask = new QueryTask(urls.industryArea);
+			queryTask.execute(params, queryIndustrySuccess, queryIndustryError);
+	}
+
+	function queryIndustrySuccess(response){
+		var geometry = response.features[0].geometry;
+		console.log(geometry);
+		addGeometryString(geometry, textareas[0]);
+		addGraphic(geometry);
 
 	}
 
-	function parsePolyline(json){
-		
-	}
-
-	function parsePolygon(json){
-
+	function queryIndustryError(error){
+		console.log(error);
 	}
 });

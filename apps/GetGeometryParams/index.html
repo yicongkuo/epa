@@ -25,75 +25,114 @@
 	    <div class="ui segment">
 		    <a class="ui teal top attached label">功能面板</a>
 			<div class="ui form">
-				<div class="field">
-					<label>點選以下按鈕啟動繪圖功能，再點一下可以取消繪圖</label>
-					<div class="ui buttons">
-						<button id="POINT" class="ui button undrawing">
-							點
-						</button>
-						<button id="POLYLINE" class="ui button undrawing">
-							線
-						</button>
-						<button id="RECTANGLE" class="ui button undrawing">
-							面
-						</button>
+				<div class="ui accordion field">
+					<div class="activate title">
+						<span><i class="icon dropdown"></i>自己畫圖</span>
 					</div>
+					<div class="activate content">
+						<label>
+							點選以下按鈕啟動繪圖功能，再點一下可以取消繪圖
+						</label>
+						<div class="two fields">
+							<div class="field">
+								<div class="ui buttons">
+									<button id="POINT" 
+											class="ui button undrawing">
+										點
+									</button>
+									<button id="POLYLINE" 
+											class="ui button undrawing">
+										線
+									</button>
+									<button id="RECTANGLE" 
+											class="ui button undrawing">
+										面
+									</button>
+								</div>
+							</div>
+							<div class="field">
+								<button class="ui button removeText">
+									清除內容
+								</button>
+							</div>
+						</div>
+						<br>
+						<div class="field">
+							<div id="isBuffer" class="ui toggle checkbox">
+							  <input type="checkbox" name="public">
+							  <label>產生環域圖形</label>
+							</div>					
+						</div>
+						<br>
+						<div class="two fields">
+							<div class="field">
+								<label>環域距離</label>
+								<input id="distance" type="text" value="500" placeholder="距離">
+							</div>
+							<div class="field">
+								<label>單位</label>
+								<select id="units" class="ui fluid dropdown">
+									<option value="meters" SELECTED>公尺</option>
+									<option value="kilometers">公里</option>
+								</select>
+							</div>	
+						</div>
+					</div>
+				</div>
+			
+				<div class="ui accordion field">
+					<div class="title">
+						<span><i class="icon dropdown"></i>工業區幾何參數</span>
+					</div>
+					<div class="content field">
+						<div class="two fields">
+							<div class="field">
+								<select id="industrailArea" class="ui search selection dropdown">
+									<option value="" disabled selected>選擇工業區</option>
+									<option value="觀音工業區">觀音工業區</option>
+								</select>
+							</div>
+							<div class="field">
+								<button class="ui button removeText">
+									清除內容
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
 
-					<button id="RemoveText" class="ui button undrawing">
-						清除字串
-					</button>
-				</div>
-				
-				<div class="inline fields">
-					<div class="three wide field">
-						<label class="ui right pointing label">上傳檔案</label>
+				<div class="ui accordion field">			
+					<div class="title">
+						<span><i class="icon dropdown"></i>上傳檔案</span>
 					</div>
-					
-					<form enctype="multipart/form-data" method="post"
-						      id="uploadForm" class="ui form four wide field"> 
-						<div class="ui action input">
-						    <label for="inFile" class="ui icon button">
-						        <i class="file icon"></i>
-						        上傳檔案
-						    </label>
-						    <input id="inFile" name="file" type="file" style="display:none">
-						</div>	
-					</form>
-					<div class="nine wide field">
-						<label>檔案格式</label>
-						<select id="fileType" class="ui dropdown">
-							<option value="geojson">GeoJSON</option>
-							<option value="shapefile" SELECTED>Shapefile</option>
-						</select>
+					<div class="content field">
+						<div class="fields">
+							<form enctype="multipart/form-data" method="post"
+								      id="uploadForm" class="four wide field">
+								<div class="ui action input">
+								    <label for="inFile" class="ui icon button">
+								        <i class="file icon"></i>
+								        開啟檔案
+								    </label>
+								    <input id="inFile" name="file" type="file" style="display:none">
+								</div>	
+							</form>
+							<div class="six wide field">
+								<select id="fileType" class="ui dropdown">
+									<option value="" disabled selected>選擇檔案格式</option>
+									<option value="geojson">GeoJSON</option>
+									<option value="shapefile" SELECTED>Shapefile</option>
+								</select>
+							</div>
+						</div>
+						<div id="upload-status" class="field"></div>
+						<div class="field"><button class="ui button removeText">清除內容</button></div>
 					</div>
 				</div>
-				<div id="upload-status" class="field"></div>
 
 				<div class="field">
 					<label>幾何圖形參數字串</label>
 					<textarea id="geoString" ></textarea>
-				</div>
-
-				<div class="field">
-					<div id="isBuffer" class="ui toggle checkbox">
-					  <input type="checkbox" name="public">
-					  <label>產生環域圖形</label>
-					</div>					
-				</div>
-
-				<div class="inline fields">
-					<div class="three wide field">
-						<label class="ui right pointing label">環域距離</label>
-					</div>
-					<div class="six wide field">
-						<input id="distance" type="text" value="500" placeholder="距離">
-					</div>
-					<div class="five wide field">
-						<select id="units" class="ui fluid dropdown">
-							<option value="meters" SELECTED>公尺</option>
-							<option value="kilometers">公里</option>
-						</select>
-					</div>	
 				</div>
 
 				<div class="field">
