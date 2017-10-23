@@ -320,10 +320,9 @@ require([
 
 	function queryIndustrySuccess(response){
 		var geometry = response.features[0].geometry;
-		console.log(geometry);
 		addGeometryString(geometry, textareas[0]);
 		addGraphic(geometry);
-
+		map.setExtent();
 	}
 
 	function queryIndustryError(error){
