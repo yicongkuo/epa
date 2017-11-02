@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>時空立方體</title>
+
+	<!-- load esri resource -->
+	<link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
+	<script src="https://js.arcgis.com/4.5/"></script>
+
+	<style>
+		html, body, #viewDiv{
+			width  : 100%;
+			height : 100%;
+			padding: 0;
+			margin : 0;
+		}
+	</style>
+
+	<!-- main script -->
+	<script>
+		require([
+			"esri/WebScene",
+			"esri/views/SceneView",
+			"dojo/domReady!"
+		], function (WebScene, SceneView){
+			var scene = new WebScene({
+				// autocasts as esri/portal/PortalItem
+				portalItem: {
+					id: "c56de17f87fb4c4a99a06d0abd238cf8"
+				}
+			});
+
+			var view = new SceneView({
+				map: scene,  // The WebScene instance created above
+				container: "viewDiv"
+			});
+
+			view.then(function (response){
+				console.log(response);
+			});
+		});
+	</script>
+</head>
+<body>
+	<div id="viewDiv"></div>
+</body>
+</html>
