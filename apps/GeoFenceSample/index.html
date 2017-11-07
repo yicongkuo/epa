@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>警戒區告警範例</title>
+
+	<!-- load esri resource -->
+	<link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
+	<script src="https://js.arcgis.com/4.5/"></script>
+	<link rel="stylesheet" href="./grid.css">
+
+	<style>
+		html, body, #mapView{
+			width: 100%;
+			height: 100%;
+			padding: 0;
+			margin: 0;
+		}
+	</style>
+
+	<!-- main script -->
+	<script>
+		require([
+			"esri/views/MapView",
+			"esri/Map",
+			"esri/layers/FeatureLayer",
+			
+			"esri/tasks/support/Query",
+			"esri/tasks/QueryTask",
+			"esri/Graphic",
+
+			"esri/widgets/Track",
+			"esri/widgets/Home",
+
+			"dojo/domReady!"
+		], function (
+			MapView, Map, FeatureLayer, 
+			Query, QueryTask, Graphic,
+			Track, Home
+		){
+			// 建立地圖與圖框
+			var map = new Map({
+				basemap: "osm"
+			});
+
+			var mapView = new MapView({
+				container: "mapView",
+				map: map,
+				center: [121.113133, 25.056962],
+				zoom : 14
+			});
+
+			// 加入工業區圖層
+			var industry = {};
+				industry.url = "https://services7.arcgis.com/tVmMUEViFfyHBZvj/ArcGIS/rest/services/TaiwanIndustryArea/FeatureServer/0";
+			
+				industry.layer = new FeatureLayer({
+					url: industry.url,
+					outFields: ["*"]
+				});
+
+			map.add(industry.layer);
+
+			// Home按鈕
+			var homeWidget = new Home({
+  				view: mapView
+			});
+			mapView.ui.add(homeWidget, "top-left");
+
+			// 偵測現在位置
+			var mapPoint = {};
+			var track = new Track({
+				view: mapView
+			});
+			
+			mapView.ui.add(track, "top-left");
+
+			mapView.then(function() {
+				track.start();
+				track.on("track", function (position){
+					mapPoint = position.target.graphic.geometry;
+					checkSafety(mapPoint);
+				});
+			});
+
+			// 設定滑鼠點擊事件
+			mapView.on("click", function (evt){
+				mapPoint = evt.mapPoint;
+				checkSafety(mapPoint);
+			});
+
+			function checkSafety(pointGeometry){
+				// 查詢空間關係
+				var query = new Query();
+					query.geometry = pointGeometry;
+					query.spatialRelationship = "within";
+					query.outField = ["*"];
+					query.returnGeometry = false;
+
+				var queryTask = new QueryTask({url: industry.url});
+					queryTask.execute(query).then(querySuccess, queryError);
+			}
+
+			function addPoint(geometry, symbol){
+				var graphic = new Graphic({
+					geometry: geometry,
+  					symbol: getPointSymbol(symbol)
+				});
+
+				mapView.graphics.add(graphic);
+			}
+
+			function getPointSymbol(type){
+				if(type === "warning"){
+					return {
+					    type: "picture-marker",
+					    url: "./icons/warning.png",
+					    width: 20,
+					    height: 20
+					};
+				}
+
+				if(type === "safe"){
+					return {
+					    type: "picture-marker",
+					    url: "./icons/safe.png",
+					    width: 20,
+					    height: 20
+					};
+				}
+			}
+
+			function querySuccess(response){
+				var warning = response.features.length;
+				if(warning){
+					addPoint(mapPoint, "warning");
+				}
+
+				if(!warning){
+					addPoint(mapPoint, "safe");
+				}
+			}
+
+			function queryError(error){
+				console.log(error);
+			}
+
+		});
+	</script>
+</head>
+<body>
+	<div id="mapView"></div>
+</body>
+</html>
