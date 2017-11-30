@@ -1,4 +1,4 @@
-# 讀取指定範圍內的感測器數據
+# 讀取指定範圍內的即時感測器數據
 
 ## url 
 
@@ -51,6 +51,6 @@ https://<featurelayer-url>/<featureId>/query
 
 ## api呼叫範例
 
-[讀取指定範圍內的感測器數據](https://services7.arcgis.com/tVmMUEViFfyHBZvj/ArcGIS/rest/services/Bigdata/FeatureServer/54/query?f=html&geometry={"rings":[[[13482171.440642975,2883345.1010674853],[13482911.924354507,2883345.1010674853],[13482911.924354507,2882757.4914125274],[13482171.440642975,2882757.4914125274],[13482171.440642975,2883345.1010674853]]],"spatialReference":{"wkid":102100}}&geometryType=esriGeometryPolygon&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=true)
+[讀取指定範圍內的即時感測器數據](https://demo99.igis.com.tw/server/rest/services/Hosted/EPA-MQTT-Stream-feature/FeatureServer/0/query?f=html&geometry={"rings":[[[13482171.440642975,2883345.1010674853],[13482911.924354507,2883345.1010674853],[13482911.924354507,2882757.4914125274],[13482171.440642975,2882757.4914125274],[13482171.440642975,2883345.1010674853]]],"spatialReference":{"wkid":102100}}&geometryType=esriGeometryPolygon&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=true)
 
-`https://services7.arcgis.com/tVmMUEViFfyHBZvj/ArcGIS/rest/services/Bigdata/FeatureServer/54/query?f=json&geometry={"rings":[[[13482171.440642975,2883345.1010674853],[13482911.924354507,2883345.1010674853],[13482911.924354507,2882757.4914125274],[13482171.440642975,2882757.4914125274],[13482171.440642975,2883345.1010674853]]],"spatialReference":{"wkid":102100}}&geometryType=esriGeometryPolygon&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=true`
+`https://demo99.igis.com.tw/server/rest/services/Hosted/EPA-MQTT-Stream-feature/FeatureServer/0/query?f=json&geometry={"rings":[[[13482171.440642975,2883345.1010674853],[13482911.924354507,2883345.1010674853],[13482911.924354507,2882757.4914125274],[13482171.440642975,2882757.4914125274],[13482171.440642975,2883345.1010674853]]],"spatialReference":{"wkid":102100}}&geometryType=esriGeometryPolygon&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=true`

@@ -27,14 +27,13 @@ https://<featurelayer-url>/<featureId>/query
    可使用以下指令：
 	
    ```
-     where = deviceId='1875819825'
+     where = deviceId='1875296284'
    ```
- - 想要查詢`2017/06/21 早上03:05` ~ `2017/06/21 早上04:32`
+ - 想要查詢`2017/11/28 早上00:00` ~ `2017/11/30 晚上23:59`
    之間的所有資料，可使用以下指令：
 	
    ```
-     where = time > '2017/06/21 03:05:00' AND time < '2017/06/21 04:32:00'
-   ```
+     where = time BETWEEN timestamp '2017-11-28 00:00:00' AND timestamp '2017-11-30 23:59:59'
 
 `outFields`
 
@@ -52,6 +51,7 @@ https://<featurelayer-url>/<featureId>/query
 
 ## api呼叫範例
 
-[讀取指定範圍內的感測器數據](https://services7.arcgis.com/tVmMUEViFfyHBZvj/ArcGIS/rest/services/Bigdata/FeatureServer/54/query?f=html&where=time%3E%20%272017/06/21%2003:05:00%27%20AND%20time%20%3C%20%272017/06/21%2004:32:00%27%20AND%20deviceId%20=%201875819825&returnGeometry=true&outFields=*)
+[讀取時間區段內即時感測器的數據](https://demo99.igis.com.tw/server/rest/services/Hosted/EPA-MQTT-BigStore-feature/FeatureServer/0/query?f=html&where=%20time%20BETWEEN%20timestamp%20%272017-11-28%2000:00:00%27%20AND%20timestamp%20%272017-11-30%2023:59:59%27%20AND%20deviceId%20=%20%271875296284%27&returnGeometry=true&outFields=*)
 
-`https://services7.arcgis.com/tVmMUEViFfyHBZvj/ArcGIS/rest/services/Bigdata/FeatureServer/54/query?f=json&where=time%3E%20%272017/06/21%2003:05:00%27%20AND%20time%20%3C%20%272017/06/21%2004:32:00%27%20AND%20deviceId%20=%201875819825&returnGeometry=true&outFields=*`
+`https://demo99.igis.com.tw/server/rest/services/Hosted/EPA-MQTT-BigStore-feature/FeatureServer/0?f=pjson&where=
+time BETWEEN timestamp '2017-11-28 00:00:00' AND timestamp '2017-11-30 23:59:59' AND deviceId = '1875296284'&returnGeometry=true&outFields=*`
